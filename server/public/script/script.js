@@ -4,7 +4,7 @@ var audioChunks = [];
 var time = 0;
 var counter = 0;
 
-var w = new Worker("worker.js");
+var w = new Worker("public/script/worker.js");
 
 w.onmessage = function(event) {
   if(event.data === "disconnected") {
@@ -51,7 +51,7 @@ function playAudio() {
 
     source.start(time);
     time += audioBuffer.duration;
-    
+
     counter++;
   }
 
