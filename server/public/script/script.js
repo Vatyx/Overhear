@@ -1,16 +1,19 @@
-var ws = new WebSocket("ws://localhost:3000/echo");
+ws = new WebSocket("ws://localhost:3000/ws");
+
+doit = function(msg){
+  ws.send(msg);
+}
 
 ws.onopen = function()
 { // Web Socket is connected, send data using send()
-   ws.send("Message to send");
+  ws.send("Message to send");
   // alert("Message is sent...");
   console.log("Websocket successfully connected")
 };
 
 // ws.onmessage = function (evt) 
 // { 
-//   var received_msg = evt.data;
-//   alert("Message is received...");
+//   console.log(evt.data)
 // };
 
 ws.onclose = function()
