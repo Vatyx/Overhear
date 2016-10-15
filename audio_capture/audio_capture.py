@@ -3,10 +3,10 @@ import wave
 
 
 class AudioCapturer(object):
-    CHUNK = 8192
+    CHUNK = 16384
     FORMAT = pyaudio.paInt16
     CHANNELS = 2
-    RATE = 44100
+    RATE = 88200
 
     def __init__(self):
         self.frames = []
