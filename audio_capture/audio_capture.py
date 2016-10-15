@@ -3,7 +3,7 @@ import wave
 
 
 class AudioCapturer(object):
-    CHUNK = 512
+    CHUNK = 8192
     FORMAT = pyaudio.paInt16
     CHANNELS = 2
     RATE = 44100
@@ -17,6 +17,7 @@ class AudioCapturer(object):
                                   frames_per_buffer=AudioCapturer.CHUNK,
                                   stream_callback=lambda data, frame_count, time_info, status: self._callback(data))
         self.process_callback = None
+        self.sample_size = self.p.get_sample_size(AudioCapturer.FORMAT)
 
     def _callback(self, data):
         if self.process_callback:
@@ -45,7 +46,7 @@ class AudioCapturer(object):
             frames = self.frames
         wf = wave.open(filename, 'wb')
         wf.setnchannels(AudioCapturer.CHANNELS)
-        wf.setsampwidth(self.p.get_sample_size(AudioCapturer.FORMAT))
+        wf.setsampwidth(self.sample_size)
         wf.setframerate(AudioCapturer.RATE)
         wf.writeframes(b''.join(frames))
         wf.close()

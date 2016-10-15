@@ -5,6 +5,8 @@ from audio_capture import AudioCapturer
 from websocket import *
 from base64 import b64encode
 import logging
+import wave
+import cStringIO
 
 # log everything to stdout
 root = logging.getLogger()
@@ -27,7 +29,13 @@ websocket_url = None
 count = 0
 
 def process_callback(data):
-    print(type(data))
+    # buffer = cStringIO.StringIO()
+    # wf = wave.open(buffer, 'wb')
+    # wf.setnchannels(AudioCapturer.CHANNELS)
+    # wf.setsampwidth(ac.sample_size)
+    # wf.setframerate(AudioCapturer.RATE)
+    # wf.writeframes(b''.join(data))
+    # wf.close()
     websocket_client.send(base64encode(data))
     global count
     print count
