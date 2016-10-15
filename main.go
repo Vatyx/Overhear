@@ -4,11 +4,20 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"runtime"
 )
 
 func index(w http.ResponseWriter, r *http.Request) {
 	t := template.New("index")
-	t, err := template.ParseFiles("templates\\index.html")
+	var filepath string
+	if os := runtime.GOOS; os == "darwin" || os == "linux" {
+		filepath = "templates/index.html"
+	} else {
+		/* assume Windows */
+		filepath = "templates\\index.html"
+	}
+
+	t, err := template.ParseFiles(filepath)
 	if(err != nil) {
 		panic(err)
 	}
