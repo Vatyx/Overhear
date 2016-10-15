@@ -6,7 +6,7 @@ var firstMax = 10;
 ws = new WebSocket("ws://ec2-52-36-25-96.us-west-2.compute.amazonaws.com:3000/ws");
 
 function _base64ToArrayBuffer(base64) {
-    var binary_string =  window.atob(base64);
+    var binary_string =  atob(base64);
     var len = binary_string.length;
     var bytes = new Uint8Array( len );
     for (var i = 0; i < len; i++)        {
