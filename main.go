@@ -26,8 +26,6 @@ func echo(w http.ResponseWriter, r *http.Request) {
 	    if err != nil {
 	        return
 	    }
-	    fmt.Println("%s", messageType)
-	    fmt.Println("%s", p)
 
 	    err = conn.WriteMessage(messageType, p)
 	    if err != nil {
