@@ -1,19 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"runtime"
-
-	"github.com/gorilla/websocket"
 )
-
-var upgrader = websocket.Upgrader{
-    ReadBufferSize:  1024,
-    WriteBufferSize: 1024,
-}
 
 func echo(w http.ResponseWriter, r *http.Request) {
     conn, err := upgrader.Upgrade(w, r, nil)
@@ -57,9 +49,14 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	hub := newHub()
+	go hub.run()
+
 	fs := http.FileServer(http.Dir("public"));
 	http.Handle("/public/", http.StripPrefix("/public/", fs))
-	http.HandleFunc("/echo", echo)
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		serveWs(hub, w, r)
+	})
 	http.HandleFunc("/", index)
 
 	log.Println("Listening on port 3000...")
