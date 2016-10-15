@@ -1,0 +1,15 @@
+{
+  "name": "overhear-desktop",
+  "version": "1.0.0",
+  "description": "Listen along with someone!",
+  "main": "index.js",
+  "dependencies": {
+    "electron": "^1.4.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tyler J. Durden",
+  "license": "ISC"
+}
