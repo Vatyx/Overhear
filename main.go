@@ -1,11 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 
-	"golang.org/x/net/websocket"
+	"github.com/gorilla/websocket"
 )
 
 var upgrader = websocket.Upgrader{
@@ -25,10 +26,14 @@ func echo(w http.ResponseWriter, r *http.Request) {
 	    if err != nil {
 	        return
 	    }
-	    if err = conn.WriteMessage(messageType, p); err != nil {
-	        return err
+	    fmt.Println("%s", messageType)
+	    fmt.Println("%s", p)
+
+	    err = conn.WriteMessage(messageType, p)
+	    if err != nil {
+	        return 
+	    }
     }
-}
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +52,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 func main() {
 	fs := http.FileServer(http.Dir("public"));
 	http.Handle("/public/", http.StripPrefix("/public/", fs))
-	http.HandleFunc("/echo", echoHandler)
+	http.HandleFunc("/echo", echo)
 	http.HandleFunc("/", index)
 
 	log.Println("Listening on port 3000...")
