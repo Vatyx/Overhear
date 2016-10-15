@@ -3,7 +3,7 @@ import wave
 
 
 class AudioCapturer(object):
-    CHUNK = 1024
+    CHUNK = 518
     FORMAT = pyaudio.paInt16
     CHANNELS = 2
     RATE = 44100
@@ -57,7 +57,7 @@ def test():
     f = []
     AC.run(process_callback=lambda data: f.append(data))
     print "recording..."
-    for i in xrange(1, 5):
+    for i in xrange(1, 60):
         time.sleep(1)
     AC.stop()
     print "done..."
