@@ -1,7 +1,7 @@
 var audioChunks = [];
 var time = 0;
 var counter = 0;
-var firstMax = 10;
+var firstMax = 20;
 
 ws = new WebSocket("ws://ec2-52-36-25-96.us-west-2.compute.amazonaws.com:3000/ws");
 
@@ -25,6 +25,7 @@ ws.onmessage = function(message) {
 	counter++;
 	if(counter == 10) {
 		postMessage(audioChunks);
+		audioChunks = [];
 	}
 }
 
