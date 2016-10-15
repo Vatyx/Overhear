@@ -1,7 +1,14 @@
 ws = new WebSocket("ws://localhost:3000/ws");
+ws.binaryType = "arraybuffer"
 
-doit = function(msg){
-  ws.send(msg);
+function _base64ToArrayBuffer(base64) {
+    var binary_string =  window.atob(base64);
+    var len = binary_string.length;
+    var bytes = new Uint8Array( len );
+    for (var i = 0; i < len; i++)        {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;
 }
 
 ws.onopen = function()
@@ -11,10 +18,11 @@ ws.onopen = function()
   console.log("Websocket successfully connected")
 };
 
-// ws.onmessage = function (evt) 
-// { 
-//   console.log(evt.data)
-// };
+ //ws.onmessage = function (evt)
+ //{
+ //  console.log(_base64ToArrayBuffer(evt.data))
+ //  //console.log(evt.data);
+ //};
 
 ws.onclose = function()
 { 
@@ -24,9 +32,8 @@ ws.onclose = function()
 
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-ws.binaryType = 'arraybuffer'
 ws.onmessage = function(message) {
-  var arrayBuffer = message.data // wav from server, as arraybuffer
+  var arrayBuffer = _base64ToArrayBuffer(message.data) // wav from server, as arraybuffer
   var source = audioContext.createBufferSource();
   audioContext.decodeAudioData(arrayBuffer, function(buffer){
     source.buffer = buffer

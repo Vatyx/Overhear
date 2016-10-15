@@ -1,7 +1,9 @@
 from flask import Flask
+from threading import Thread
 import sys
 from audio_capture import AudioCapturer
-from websocket import create_connection
+from websocket import *
+from base64 import b64encode
 
 app = Flask(__name__)
 
@@ -9,9 +11,14 @@ ac = None
 websocket_client = None
 websocket_url = None
 
+count = 0
 
 def process_callback(data):
-    websocket_client.send(data)
+    print(type(data))
+    websocket_client.send(base64encode(data))
+    global count
+    print count
+    count += 1
 
 
 @app.route('/')
@@ -26,8 +33,8 @@ def run():
         ac.run(process_callback=process_callback)
     else:
         ac = AudioCapturer()
-        print websocket_url
         websocket_client = create_connection(websocket_url)
+        websocket_client.send("Sender connected")
         ac.run(process_callback=process_callback)
     return 'run'
 
