@@ -58,7 +58,7 @@ def test():
     f = []
     AC.run(process_callback=lambda data: f.append(data))
     print "recording..."
-    for i in xrange(1, 60):
+    for i in xrange(1, 5):
         time.sleep(1)
     AC.stop()
     print "done..."

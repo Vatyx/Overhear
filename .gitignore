@@ -1,2 +1,4 @@
 desktop/node_modules/
 audio_capture/hello.py
+*.pyc
+*.wav

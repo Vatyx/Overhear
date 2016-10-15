@@ -4,7 +4,8 @@
   "description": "Listen along with someone!",
   "main": "index.js",
   "dependencies": {
-    "electron": "^1.4.3"
+    "electron": "^1.4.3",
+    "python-shell": "^0.4.0"
   },
   "devDependencies": {},
   "scripts": {
