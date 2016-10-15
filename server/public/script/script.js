@@ -72,7 +72,7 @@ ws.onmessage = function(message) {
 
                     var source = audioContext.createBufferSource();
 
-                    var audioBuffer = audioContext.createBuffer(1, right.length, 44100);
+                    var audioBuffer = audioContext.createBuffer(1, right.length, 44100*2);
                     audioBuffer.getChannelData(0).set(right);
 
 
