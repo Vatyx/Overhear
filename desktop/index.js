@@ -1,4 +1,5 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow} = require('electron');
+var PythonShell            = require('python-shell');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -6,25 +7,39 @@ let win
 
 function createWindow () {
 
-	// var subpy = require('child_process').spawn('python', ['../audio_capture/audio_capture.py']);
-	var subpy = require('child_process').spawn('python', ['../audio_capture/hello.py']);
-
-	// Create the browser window.
-	win = new BrowserWindow({width: 800, height: 600});
-
-	// and load the index.html of the app.
-	win.loadURL(`file://${__dirname}/index.html`);
-
-	// Open the DevTools.
-	win.webContents.openDevTools();
-
-	// Emitted when the window is closed.
-	win.on('closed', () => {
-		// Dereference the window object, usually you would store windows
-		// in an array if your app supports multi windows, this is the time
-		// when you should delete the corresponding element.
-		win = null;
+	var options = {
+		mode: 'text',
+		pythonOptions: ['-u'],
+		args: ['8888', 'ws://localhost:3000/echo']
+	};
+	var pyshell = new PythonShell('../audio_capture/mini_server.py', options);
+	pyshell.on('message', (message) => {
+		console.log('PYTHON: ' + message);	
 	});
+	/* give the Flask server time to set up */
+	setTimeout(() => {
+		// Create the browser window.
+		win = new BrowserWindow({width: 800, height: 600});
+		win.webContents.session.clearCache(function(){
+			// and load the index.html of the app.
+			win.loadURL('http://localhost:8888/');
+
+			// Open the DevTools.
+			win.webContents.openDevTools();
+
+			// Emitted when the window is closed.
+			win.on('closed', () => {
+				// Dereference the window object, usually you would store windows
+				// in an array if your app supports multi windows, this is the time
+				// when you should delete the corresponding element.
+				win = null;
+			});
+
+		});
+
+		
+	}, 200);
+
 }
 
 // This method will be called when Electron has finished

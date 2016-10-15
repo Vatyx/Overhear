@@ -1,0 +1,21 @@
+<!doctype html>
+{% block head %}
+<script src="js/rest_functions.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+{% endblock %}
+
+{% block body %}
+<title>Overhear</title>
+<div class=page>
+	<h1>Overhear</h1>
+
+	<!-- <button id="playpause-button" onclick="alert('button clicked!')">Play/Pause</button> -->
+	<form action="/pause">
+		<button id="playpause-button">Play/Pause</button>
+	</form>
+	<form action="/stop">
+		<button id="stop-button">Stop</button>
+	</form>
+</div>
+{% endblock %}
+	<!-- <button id="playpause-button" onclick="playpause()">Play/Pause</button> -->

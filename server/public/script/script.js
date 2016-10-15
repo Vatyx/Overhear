@@ -46,6 +46,8 @@ function playAudio() {
     audioBuffer.getChannelData(0).set(right);
 
     source.buffer = audioBuffer;
+    var audioBuffer = audioContext.createBuffer(1, right.length, 44100*2);
+    audioBuffer.getChannelData(0).set(right);
 
     source.connect(audioContext.destination);
 
