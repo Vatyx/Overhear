@@ -9,13 +9,10 @@ ac = None
 websocket_client = None
 websocket_url = None
 
-count = 0
 
 def process_callback(data):
     websocket_client.send(data)
-    global count
-    print count
-    count += 1
+
 
 @app.route('/')
 def main():
@@ -34,11 +31,13 @@ def run():
         ac.run(process_callback=process_callback)
     return 'run'
 
+
 @app.route('/pause')
 def pause():
     global ac
     ac.pause()
     return 'pause'
+
 
 @app.route('/stop')
 def stop():
@@ -48,6 +47,7 @@ def stop():
     ac = None
     websocket_client = None
     return 'stop'
+
 
 if __name__ == '__main__':
     port_number = None
