@@ -1,4 +1,4 @@
-ws = new WebSocket("ws://localhost:3000/ws");
+ws = new WebSocket("ws://ec2-52-36-25-96.us-west-2.compute.amazonaws.com:3000/ws");
 ws.binaryType = "arraybuffer"
 
 function _base64ToArrayBuffer(base64) {
