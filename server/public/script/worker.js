@@ -20,11 +20,11 @@ ws.onopen = function() {
 }
 
 ws.onmessage = function(message) {
-	var bufferArray = _base64ToArrayBuffer(message);
+	var bufferArray = _base64ToArrayBuffer(message.data);
 	audioChunks.push(bufferArray);
 	counter++;
 	if(counter == 10) {
-		postMessage(message);
+		postMessage(audioChunks);
 	}
 }
 
