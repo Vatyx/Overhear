@@ -31,6 +31,7 @@
                    //@TODO http requests
                    jQuery('#prompt').hide('slow','linear',function(){
                    		buttonClicked();
+                   		jQuery('.loader').show('slow', 'linear')
                    });
                }else{
                    streamer_id.attr("placeholder", "Please enter a streamer's id");
