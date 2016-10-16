@@ -1,7 +1,7 @@
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 var audioChunks = [];
-var time = 10;
+var time = 0;
 var counter = 0;
 var first = true;
 
@@ -13,7 +13,7 @@ w.onmessage = function(event) {
 	}
 	else{
 		if(first) {
-			time = audioContext.currentTime + 2;
+			time = audioContext.currentTime + 3;
 			console.log("FIRST", time);
 			first = false;
 		}
@@ -27,18 +27,17 @@ function playAudio() {
 	while(counter < audioChunks.length) {
 		var arrayBuffer = audioChunks[counter];
 
-        audioContext.decodeAudioData(arrayBuffer, function(buffer){
-            var source = audioContext.createBufferSource();
-            source.buffer = buffer
-            source.connect(audioContext.destination)
-            source.start(time);
-            time += source.buffer.duration
-		console.log(time);
-        }, function(){
-            console.log('error')
-        });
-        counter++
-
+		audioContext.decodeAudioData(arrayBuffer, function(buffer){
+			var source = audioContext.createBufferSource();
+			source.buffer = buffer
+			source.connect(audioContext.destination)
+			source.start(time);
+			time += source.buffer.duration
+			console.log(time);
+		}, function(){
+			console.log('error')
+		});
+		counter++
 	}
 
 	w.postMessage("empty");
@@ -53,3 +52,4 @@ function _base64ToArrayBuffer(base64) {
 	}
 	return bytes.buffer;
 }
+

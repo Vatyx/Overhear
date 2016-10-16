@@ -1,30 +1,30 @@
 var audioChunks = [];
 var time = 0;
 var counter = 0;
-var firstMax = 30;
+var firstMax = 40;
 
 ws = new WebSocket("ws://ec2-52-36-25-96.us-west-2.compute.amazonaws.com:3000/ws");
 var Base64Binary = {
-	_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
 
-	/* will return a  Uint8Array type */
-	decodeArrayBuffer: function(input) {
-		var bytes = (input.length/4) * 3;
-		var ab = new ArrayBuffer(bytes);
-		this.decode(input, ab);
+	  /* will return a  Uint8Array type */
+	  decodeArrayBuffer: function(input) {
+		  var bytes = (input.length/4) * 3;
+		  var ab = new ArrayBuffer(bytes);
+		  this.decode(input, ab);
 
-		return ab;
-	},
+		  return ab;
+	  },
 
-	removePaddingChars: function(input){
-		var lkey = this._keyStr.indexOf(input.charAt(input.length - 1));
-		if(lkey == 64){
-			return input.substring(0,input.length - 1);
-		}
-		return input;
-	},
+removePaddingChars: function(input){
+			    var lkey = this._keyStr.indexOf(input.charAt(input.length - 1));
+			    if(lkey == 64){
+				    return input.substring(0,input.length - 1);
+			    }
+			    return input;
+		    },
 
-	decode: function (input, arrayBuffer) {
+decode: function (input, arrayBuffer) {
 		//get last chars to see if are valid
 		input = this.removePaddingChars(input);
 		input = this.removePaddingChars(input);
@@ -69,11 +69,11 @@ function _base64ToArrayBuffer(base64) {
 }
 
 ws.onopen = function() {
-  console.log("Websocket successfully connected")
+	console.log("Websocket successfully connected")
 }
 
 ws.onmessage = function(message) {
-	console.log("Got new chunk");
+	console.log("Got chunk");
 	var bufferArray = _base64ToArrayBuffer(message.data);
 	audioChunks.push(bufferArray);
 	counter++;
@@ -84,14 +84,14 @@ ws.onmessage = function(message) {
 }
 
 ws.onclose = function() {
-  console.log("Disconnected from host");
-  postMessage("disconnected");
+	console.log("Disconnected from host");
+	postMessage("disconnected");
 };
 
 self.onmessage = function(event) {
 	if(event.data === "empty")
 	{
 		postMessage(audioChunks);
-		audioChunks = [];	
+		audioChunks = [];
 	}
 }
