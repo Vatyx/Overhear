@@ -5,7 +5,8 @@ var audioChunks = [];
 var time = 0;
 var counter = 0;
 var minSize = 3;
-var completelyEmpty = false;
+var completelyEmpty = true;
+var fillingup = false;
 
 var w = new Worker("public/script/worker.js");
 
@@ -14,11 +15,11 @@ w.onmessage = function(event) {
 		w.terminate();
 	}
 	else{
-		while(event.data.isEmpty() !== false) {
+		while(event.data.isEmpty() === false) {
 			queue.enqueue(event.data.dequeue());
 		}
-		// audioChunks = event.data;
-		counter = 0;
+		fillingup = false;
+
 		if(completelyEmpty === true) {
 			playAudio();
 			completelyEmpty = false;
@@ -27,7 +28,7 @@ w.onmessage = function(event) {
 }
 
 function playAudio() {
-	while(queue.isEmpty() !== false) {
+	while(queue.isEmpty() === false) {
 		var arrayBuffer = queue.dequeue();
 
         audioContext.decodeAudioData(arrayBuffer, function(buffer){
@@ -39,8 +40,10 @@ function playAudio() {
         }, function(){
             console.log('error')
         });
+        console.log(queue.size());
 
-        if(queue.size() < minSize) {
+        if(queue.size() < minSize && !fillingup) {
+        	fillingup = true;
         	w.postMessage("empty");
         }
 	}
