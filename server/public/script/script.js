@@ -1,9 +1,15 @@
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+var analyser = audioContext.createAnalyser();
+var canvas = document.getElementById('analyser_render');
+var ctx = canvas.getContext('2d');
+analyser.connect(context.destination);
 
 var audioChunks = [];
 var time = 0;
 var counter = 0;
 var first = true;
+
+var fbc_array, bars, bar_x, bar_width, bar_height;
 
 var w = new Worker("public/script/worker.js");
 
@@ -30,7 +36,8 @@ function playAudio() {
 		audioContext.decodeAudioData(arrayBuffer, function(buffer){
 			var source = audioContext.createBufferSource();
 			source.buffer = buffer
-			source.connect(audioContext.destination)
+			source.connect(analyser);
+			analyser.connect(audioContext.destination)
 			source.start(time);
 			time += source.buffer.duration
 			console.log(time);
@@ -56,4 +63,20 @@ function _base64ToArrayBuffer(base64) {
 function buttonClicked() {
 	var id = document.getElementById("streamer_id").value;
 	w.postMessage(["streamer_id", id]);
+}
+
+function frameLooper(){
+	window.webkitRequestAnimationFrame(frameLooper);
+	fbc_array = new Uint8Array(analyser.frequencyBinCount);
+	analyser.getByteFrequencyData(fbc_array);
+	ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+	ctx.fillStyle = '#00CCFF'; // Color of the bars
+	bars = 100;
+	for (var i = 0; i < bars; i++) {
+		bar_x = i * 3;
+		bar_width = 2;
+		bar_height = -(fbc_array[i] / 2);
+		//  fillRect( x, y, width, height ) // Explanation of the parameters below
+		ctx.fillRect(bar_x, canvas.height, bar_width, bar_height);
+	}
 }
