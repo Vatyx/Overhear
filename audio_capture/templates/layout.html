@@ -1,14 +1,78 @@
 <!doctype html>
-<html>
-	{% block head %}
-		<title>Overhear</title>
-	{% endblock %}
+<html style="height: 100%;">
+<head>
+	<title>Overhear</title>
+      <!-- Material Design fonts -->
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/icon?family=Material+Icons">
 
-	{% block body %}
-	<div class=page>
-		<h1>Overhear</h1>
-		<button id="playpause-button" onclick="testbutton()">Play/Pause</button>
-	</div>
-	<script src="js/rest_functions.js"></script>
-	{% endblock %}
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- Bootstrap Material Design -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-material-design.min.css">
+    <link rel="stylesheet" type="text/css" href="css/ripples.min.css">
+    <style>
+    </style>
+</head>
+<body style="height: 100%; margin: 0; padding: 0; background-color: rgba(3, 169, 244, 1);">
+
+    <div style="position: relative; top: 50%; transform: translateY(-55%);">
+        <div style="margin: 0 auto; width: 200px; text-align: center">
+                <h1 style="color: white">Overhear Broadcaster</h1>
+        </div>
+        <div style="margin: 0 auto; width: 200px; height: 100px;">
+            <button class="btn btn-raised" id='main_button' style="color: white; width: 200px; height: 100px; font-size: 3rem; background-color: rgba(171,71,188 ,1);">Share</button>
+        </div>
+        <div id="description" style="margin: 0 auto; margin-top: 40px; max-width: 250px; height: 50px; color: white; text-align: center;">
+            Click share to get your streaming ID and let others connect to you.
+        </div>
+        <div id="stream_id" style="margin: 0 auto; margin-top: 10px; max-width: 250px; height: 30px; color: white; text-align: center;"></div>
+
+    </div>
+
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="js/ripples.min.js"></script>
+    <script src="js/material.min.js"></script>
+    <script>if (window.module) module = window.module;</script>
+    <script>
+        jQuery('#main_button').click(function(){
+            var self = jQuery(this);
+            var info = jQuery('#description');
+            var stream_id = jQuery('#stream_id');
+            if (self.text() === 'Share'){
+
+                self.css("background-color", "");
+                self.addClass('btn-warning');
+                self.text('Pause');
+                info.text('Pause to stop sharing sound.');
+                stream_id.text('Your stream ID is 5');
+                jQuery.get("/run", function(data, status){
+                    console.log("First time running");
+                });
+
+            }else if (self.text() ==='Resume'){
+                jQuery.get("run", function(data, status){
+                    console.log("running")
+                    self.css("background-color", "");
+                    self.addClass('btn-warning');
+                    self.text('Pause');
+                    info.text('Pause to stop sharing sound.');
+                });
+            }
+            else{
+
+                jQuery.get("pause", function(data, status){
+                    console.log("paused");
+                    self.addClass('btn-primary');
+                    self.removeClass('btn-warning');
+                    self.text('Resume');
+                    info.text('Resume to share sound again.')
+                });
+            }
+        });
+    </script>
+</body>
 </html>
