@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, request
 from threading import Thread
 import sys
 from audio_capture import AudioCapturer
@@ -42,10 +42,10 @@ def process_callback(data):
     #count += 1
 
 
-@app.route('/js/<path:filename>')
+@app.route('/<path:filename>')
 def serve_static(filename):
     root_dir = os.path.dirname(os.getcwd())
-    directory = os.path.join(root_dir, 'static', 'js')
+    directory = os.path.join(root_dir, 'static')
     print 'directory is: ', directory
     return send_from_directory(directory, filename)
 
@@ -95,6 +95,17 @@ def stop():
     websocket_client = None
     return "oh shit you just stopped all the music man, welcome to lame town"
 
+
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+
+@app.route('/shutdown')
+def shutdown():
+    shutdown_server()
+    return 'Server shutting down...'
 
 if __name__ == '__main__':
     port_number = None

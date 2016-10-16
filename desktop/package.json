@@ -11,6 +11,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Tyler J. Durden",
+  "author": ["Tyler J. Durden", "Juliang Li"],
   "license": "ISC"
 }

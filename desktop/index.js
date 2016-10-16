@@ -1,6 +1,6 @@
 const {app, BrowserWindow} = require('electron');
 var PythonShell            = require('python-shell');
-
+var request 			   = require('request');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -10,7 +10,7 @@ function createWindow () {
 	var options = {
 		mode: 'text',
 		pythonOptions: ['-u'],
-		args: ['8888', 'ws://localhost:3000/echo']
+		args: ['8888', 'ws://ec2-52-36-25-96.us-west-2.compute.amazonaws.com:3000/ws']
 	};
 	var pyshell = new PythonShell('../audio_capture/mini_server.py', options);
 	pyshell.on('message', (message) => {
@@ -32,7 +32,9 @@ function createWindow () {
 				// Dereference the window object, usually you would store windows
 				// in an array if your app supports multi windows, this is the time
 				// when you should delete the corresponding element.
+				request.get('http://localhost:8888/shutdown');
 				win = null;
+
 			});
 
 		});
