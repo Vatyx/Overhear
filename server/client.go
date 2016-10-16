@@ -35,8 +35,8 @@ var (
 )
 
 var upgrader = websocket.Upgrader{
-	ReadBufferSize:  16384,
-	WriteBufferSize: 16384,
+	ReadBufferSize:  16384 /2,
+	WriteBufferSize: 16384 /2,
 }
 
 // Client is an middleman between the websocket connection and the hub.
@@ -63,10 +63,8 @@ func (c *Client) readPump() {
 	//c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
 		_, message, err := c.conn.ReadMessage()
-		fmt.Println(message)
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway) {
-				fmt.Println("Is this running")
 				log.Printf("error: %v", err)
 			}
 			break

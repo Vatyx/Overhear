@@ -29,17 +29,17 @@ websocket_url = None
 count = 0
 
 def process_callback(data):
-    # buffer = cStringIO.StringIO()
-    # wf = wave.open(buffer, 'wb')
-    # wf.setnchannels(AudioCapturer.CHANNELS)
-    # wf.setsampwidth(ac.sample_size)
-    # wf.setframerate(AudioCapturer.RATE)
-    # wf.writeframes(b''.join(data))
-    # wf.close()
-    websocket_client.send(base64encode(data))
-    global count
-    print count
-    count += 1
+    buffer = cStringIO.StringIO()
+    wf = wave.open(buffer, 'wb')
+    wf.setnchannels(AudioCapturer.CHANNELS)
+    wf.setsampwidth(ac.sample_size)
+    wf.setframerate(AudioCapturer.RATE)
+    wf.writeframes(b''.join(data))
+    wf.close()
+    websocket_client.send(base64encode(buffer.getvalue()))
+    #global count
+    #print count
+    #count += 1
 
 
 @app.route('/js/<path:filename>')
@@ -65,7 +65,6 @@ def run():
     else:
         ac = AudioCapturer()
         websocket_client = create_connection(websocket_url)
-        websocket_client.send("Sender connected")
         ac.run(process_callback=process_callback)
     return 'run'
 
@@ -88,7 +87,7 @@ def test():
 def stop():
     global ac, websocket_client
     if ac is not None and websocket_client is not None:
-	ac.stop()
+	    ac.stop()
     else:
         return 'AudioCapturer must be running before attempting to stop.'
 
