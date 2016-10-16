@@ -1,3 +1,56 @@
-h1 {
-	color: green;
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	padding: 40px;
+
+	background-color: rgba(3,169,244 ,1)
+}
+
+#logo {
+	width: 600px;
+	margin: 0 auto;
+	margin-bottom: 40px;
+}
+
+#prompt {
+	width: 800px;
+	text-align: center;
+	margin: 0 auto;
+	color: white;
+	font-size: 30px;
+}
+
+.card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 15px;
+
+    padding: 10px;
+
+    background-color: white;
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Add some padding inside the card container */
+.container {
+    padding: 2px 16px;
+}
+
+.md-button {
+  padding: 0 6px 0 6px;
+  margin: 6px 8px 6px 8px;
+  min-width: 88px;
+  border-radius: 3px;
+  font-size: 14px;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration:none;
+  border: none;
+  outline: none;
 }
