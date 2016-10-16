@@ -2,7 +2,7 @@ var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 var analyser = audioContext.createAnalyser();
 var canvas = document.getElementById('analyser_render');
 var ctx = canvas.getContext('2d');
-analyser.connect(context.destination);
+analyser.connect(audioContext.destination);
 
 var audioChunks = [];
 var time = 0;
@@ -22,6 +22,7 @@ w.onmessage = function(event) {
 			time = audioContext.currentTime + 3;
 			console.log("FIRST", time);
 			first = false;
+			frameLooper();
 		}
 		audioChunks = event.data;
 		counter = 0;
