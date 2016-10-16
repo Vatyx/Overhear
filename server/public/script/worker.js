@@ -3,7 +3,6 @@ var time = 0;
 var counter = 0;
 var firstMax = 40;
 
-ws = new WebSocket("ws://ec2-52-36-25-96.us-west-2.compute.amazonaws.com:3000/newconn");
 var Base64Binary = {
 _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
 
@@ -68,32 +67,12 @@ function _base64ToArrayBuffer(base64) {
 	return Base64Binary.decodeArrayBuffer(base64);
 }
 
-ws.onopen = function() {
-	console.log("Websocket successfully connected")
-}
-
-ws.onmessage = function(message) {
-	var bufferArray = _base64ToArrayBuffer(message.data);
-	audioChunks.push(bufferArray);
-	counter++;
-	if(counter == firstMax) {
-		postMessage(audioChunks);
-		audioChunks = [];
-	}
-}
-
-ws.onclose = function() {
-	console.log("Disconnected from host");
-	postMessage("disconnected");
-};
-
 self.onmessage = function(event) {
 	if(event.data === "empty") {
 		postMessage(audioChunks);
 		audioChunks = [];
 	} else if(event.data[0] === "streamer_id") {
 		var ws = new WebSocket("ws://ec2-52-36-25-96.us-west-2.compute.amazonaws.com:3000/newconn?id=" + event.data[1]);
-		
 		ws.onopen = function() {
 			console.log("Websocket successfully connected")
 		}

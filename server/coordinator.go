@@ -95,6 +95,8 @@ func getBroadcaster(c *Coordinator, w http.ResponseWriter, r *http.Request) {
     	return
 	}
 
+	fmt.Println(actualid)
+
     hub, ok := c.hubs[actualid]
     if !ok {
     	http.Error(w, "Specified hub not found", 500)
