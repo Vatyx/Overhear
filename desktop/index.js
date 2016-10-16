@@ -10,7 +10,7 @@ function createWindow () {
 	var options = {
 		mode: 'text',
 		pythonOptions: ['-u'],
-		args: ['8888', 'ws://ec2-52-36-25-96.us-west-2.compute.amazonaws.com:3000/ws']
+		args: ['8888', 'ws://ec2-52-36-25-96.us-west-2.compute.amazonaws.com:3000/getBroadcaster']
 	};
 	var pyshell = new PythonShell('../audio_capture/mini_server.py', options);
 	pyshell.on('message', (message) => {

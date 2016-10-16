@@ -14,10 +14,29 @@
 
 		<div id="prompt" class="card">
 			<div id="subtitle" style="margin-top: 10px; font-family: 'Roboto'; color: rgba(3,169,244 ,1);">Enter the id of the streamer you would like to listen to.</div>
-			<input type="text" name="firstname" size=10 style="color: black; font-size: 2rem; line-height: 1em; margin-top: 10px;text-align: center;"><br>
-			<a class="waves-effect waves-light btn" style="font-size: 1rem; background-color: rgba(171,71,188,1)">Connect!</a>
+			<input id='streamer_id' type="text" name="firstname" size=10 style="color: black; font-size: 2rem; line-height: 1em; margin-top: 10px;text-align: center;"><br>
+			<a id='connect_button' class="waves-effect waves-light btn" style="font-size: 1rem; background-color: rgba(171,71,188,1)">Connect!</a>
 		</div>
 
 		<script src="public/script/script.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		<script>
+            var connect_button = jQuery('#connect_button');
+            var streamer_id = jQuery('#streamer_id');
+            connect_button.click(function(){
+               if (streamer_id.val()){
+                   //@TODO http requests
+                   jQuery('#prompt').hide('slow','linear',function(){
+
+                   });
+               }else{
+                   streamer_id.attr("placeholder", "Please enter a streamer's id");
+               }
+
+            });
+            streamer_id.on('focus',function(){
+                this.placeholder = '';
+            });
+        </script>
 	</body>
 </html>

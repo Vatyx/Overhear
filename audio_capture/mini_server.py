@@ -95,6 +95,19 @@ def stop():
     websocket_client = None
     return "oh shit you just stopped all the music man, welcome to lame town"
 
+import urllib2
+@app.route('/newhub')
+def new_hub():
+    data = urllib2.urlopen("http://ec2-52-36-25-96.us-west-2.compute.amazonaws.com:3000/newhub").read()
+    print data
+    global ac, process_callback, websocket_client, websocket_url
+    if ac:
+        ac.run(process_callback=process_callback)
+    else:
+        ac = AudioCapturer()
+        websocket_client = create_connection(websocket_url + '?id=' + data)
+        ac.run(process_callback=process_callback)
+    return data
 
 def shutdown_server():
     func = request.environ.get('werkzeug.server.shutdown')
