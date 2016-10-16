@@ -7,26 +7,6 @@ import (
 	"runtime"
 )
 
-func echo(w http.ResponseWriter, r *http.Request) {
-    conn, err := upgrader.Upgrade(w, r, nil)
-    if err != nil {
-        log.Println(err)
-        return
-    }
-
-    for {
-	    messageType, p, err := conn.ReadMessage()
-	    if err != nil {
-	        return
-	    }
-
-	    err = conn.WriteMessage(messageType, p)
-	    if err != nil {
-	        return 
-	    }
-    }
-}
-
 func index(w http.ResponseWriter, r *http.Request) {
 	t := template.New("index")
 	var filepath string
@@ -49,13 +29,19 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	hub := newHub()
-	go hub.run()
+	coordinator := newCoordinator()
+	go coordinator.run()
 
 	fs := http.FileServer(http.Dir("public"));
 	http.Handle("/public/", http.StripPrefix("/public/", fs))
-	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		serveWs(hub, w, r)
+	http.HandleFunc("/newhub", func(w http.ResponseWriter, r *http.Request) {
+		createHub(coordinator, w, r)
+	})
+	http.HandleFunc("/getBroadcaster", func(w http.ResponseWriter, r *http.Request) {
+		createHub(coordinator, w, r)
+	})
+	http.HandleFunc("/newconn", func(w http.ResponseWriter, r *http.Request) {
+		serveWs(coordinator, w, r)
 	})
 	http.HandleFunc("/", index)
 
