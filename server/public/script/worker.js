@@ -88,9 +88,29 @@ ws.onclose = function() {
 };
 
 self.onmessage = function(event) {
-	if(event.data === "empty")
-	{
+	if(event.data === "empty") {
 		postMessage(audioChunks);
 		audioChunks = [];
+	} else if(event.data[0] === "streamer_id") {
+		var ws = new WebSocket("ws://ec2-52-36-25-96.us-west-2.compute.amazonaws.com:3000/newconn?id=" + event.data[1]);
+		
+		ws.onopen = function() {
+			console.log("Websocket successfully connected")
+		}
+
+		ws.onmessage = function(message) {
+			var bufferArray = _base64ToArrayBuffer(message.data);
+			audioChunks.push(bufferArray);
+			counter++;
+			if(counter == firstMax) {
+				postMessage(audioChunks);
+				audioChunks = [];
+			}
+		}
+
+		ws.onclose = function() {
+			console.log("Disconnected from host");
+			postMessage("disconnected");
+		};
 	}
 }
