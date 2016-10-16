@@ -52,7 +52,7 @@ type NewHub struct{
 }
 
 func createHub(c *Coordinator, w http.ResponseWriter, r *http.Request) {
-	fmt.Println("New Hub with id %d!", hubId)
+	fmt.Println("New Hub with id ", hubId)
 	hub := &Hub{
 		coordinator: c,
 		id:          hubId,
@@ -64,13 +64,13 @@ func createHub(c *Coordinator, w http.ResponseWriter, r *http.Request) {
 	}
 
 	c.register <- hub
-	
-	h := NewHub{id: hubId}
+
+	sentId := hubId
 	hubId += 1
 
 	go hub.run()
 
-	json.NewEncoder(w).Encode(h)	
+	fmt.Fprintf(w, "%d", sentId)
 }
 
 func getBroadcaster(c *Coordinator, w http.ResponseWriter, r *http.Request) {

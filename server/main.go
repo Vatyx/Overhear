@@ -2,6 +2,7 @@ package main
 
 import (
 	"html/template"
+	"fmt"
 	"log"
 	"net/http"
 	"runtime"
@@ -38,7 +39,8 @@ func main() {
 		createHub(coordinator, w, r)
 	})
 	http.HandleFunc("/getBroadcaster", func(w http.ResponseWriter, r *http.Request) {
-		createHub(coordinator, w, r)
+		fmt.Println("About to assign broadcaster")
+		getBroadcaster(coordinator, w, r)
 	})
 	http.HandleFunc("/newconn", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(coordinator, w, r)
