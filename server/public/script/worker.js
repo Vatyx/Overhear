@@ -73,7 +73,6 @@ ws.onopen = function() {
 }
 
 ws.onmessage = function(message) {
-	console.log("Got chunk");
 	var bufferArray = _base64ToArrayBuffer(message.data);
 	audioChunks.push(bufferArray);
 	counter++;

@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -31,7 +32,7 @@ const (
 var (
 	newline = []byte{'\n'}
 	space   = []byte{' '}
-	id = byte(0)
+	id = 0
 )
 
 var upgrader = websocket.Upgrader{
@@ -43,7 +44,7 @@ var upgrader = websocket.Upgrader{
 type Client struct {
 	hub *Hub
 
-	id byte
+	id int
 
 	// The websocket connection.
 	conn *websocket.Conn
@@ -58,9 +59,7 @@ func (c *Client) readPump() {
 		c.hub.unregister <- c
 		c.conn.Close()
 	}()
-	//c.conn.SetReadLimit(maxMessageSize)
-	//c.conn.SetReadDeadline(time.Now().Add(pongWait))
-	//c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+
 	for {
 		_, message, err := c.conn.ReadMessage()
 		if err != nil {
@@ -70,7 +69,7 @@ func (c *Client) readPump() {
 			break
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		message = append(message[:], c.id)
+		// message = append(message[:], c.id)
 		c.hub.broadcast <- message
 	}
 }
@@ -123,8 +122,28 @@ func (c *Client) writePump() {
 }
 
 // serveWs handles websocket requests from the peer.
-func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
-	fmt.Println("new connection!")
+func serveWs(c *Coordinator, w http.ResponseWriter, r *http.Request) {
+	url := r.URL
+	values := url.Query()
+	hid, ok := values["id"]
+	if !ok {
+    	http.Error(w, "No id passed by request", 500)
+    	return
+	}
+
+	actualid, err := strconv.Atoi(hid[0])
+	if err != nil {
+		http.Error(w, "Malformed id given in parameters", 500)
+    	return
+	}
+
+    hub, ok := c.hubs[actualid]
+    if !ok {
+    	http.Error(w, "Specified hub not found", 500)
+    	return
+    }
+
+	fmt.Println("New Connection in hub %d!", actualid)
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)

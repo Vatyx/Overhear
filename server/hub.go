@@ -3,8 +3,16 @@ package main
 // hub maintains the set of active clients and broadcasts messages to the
 // clients.
 type Hub struct {
+	coordinator *Coordinator
+
 	// Registered clients.
 	clients map[*Client]bool
+
+	//unique id
+	id int
+
+	//broadcaster
+	broadcaster *Client
 
 	// Inbound messages from the clients.
 	broadcast chan []byte
@@ -34,17 +42,18 @@ func (h *Hub) run() {
 			if _, ok := h.clients[client]; ok {
 				delete(h.clients, client)
 				close(client.send)
+			} else if h.broadcaster == client {
+				close(h.broadcaster.send);
+				h.coordinator.unregister <- h
 			}
 		case message := <-h.broadcast:
 			for client := range h.clients {
-				if id := message[len(message)-1:][0]; client.id != id {
-					select {
-					case client.send <- message[:len(message)-1]:
-					default:
-						close(client.send)
-						delete(h.clients, client)
-					}
-				}	
+				select {
+				case client.send <- message[:len(message)-1]:
+				default:
+					close(client.send)
+					delete(h.clients, client)
+				}
 			}
 		}
 	}
