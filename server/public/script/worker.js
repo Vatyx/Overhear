@@ -1,4 +1,4 @@
-var audioChunks = [];
+var queue = buckets.Queue();
 var time = 0;
 var counter = 0;
 var firstMax = 20;
@@ -65,13 +65,6 @@ var Base64Binary = {
 }
 
 function _base64ToArrayBuffer(base64) {
-    //var binary_string =  atob(base64);
-    //var len = binary_string.length;
-    //var bytes = new Uint8Array( len );
-    //for (var i = 0; i < len; i++)        {
-    //    bytes[i] = binary_string.charCodeAt(i);
-    //}
-    //return bytes.buffer;
 	return Base64Binary.decodeArrayBuffer(base64);
 }
 
@@ -81,11 +74,12 @@ ws.onopen = function() {
 
 ws.onmessage = function(message) {
 	var bufferArray = _base64ToArrayBuffer(message.data);
-	audioChunks.push(bufferArray);
+	// audioChunks.push(bufferArray);
+	queue.enqueue(bufferArray);
 	counter++;
-	if(counter == firstMax) {
-		postMessage(audioChunks);
-		audioChunks = [];
+	if(counter === firstMax) { //code is only ran once
+		postMessage(queue);
+		queue.clear();	
 	}
 }
 
@@ -97,7 +91,7 @@ ws.onclose = function() {
 self.onmessage = function(event) {
 	if(event.data === "empty")
 	{
-		postMessage(audioChunks);
-		audioChunks = [];	
+		postMessage(queue);
+		queue.clear();
 	}
 }

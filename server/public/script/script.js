@@ -1,8 +1,11 @@
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
+var queue = buckets.Queue();
 var audioChunks = [];
 var time = 0;
 var counter = 0;
+var minSize = 3;
+var completelyEmpty = false;
 
 var w = new Worker("public/script/worker.js");
 
@@ -11,15 +14,21 @@ w.onmessage = function(event) {
 		w.terminate();
 	}
 	else{
-		audioChunks = event.data;
+		while(event.data.isEmpty() !== false) {
+			queue.enqueue(event.data.dequeue());
+		}
+		// audioChunks = event.data;
 		counter = 0;
-		playAudio();
+		if(completelyEmpty === true) {
+			playAudio();
+			completelyEmpty = false;
+		}
 	}
 }
 
 function playAudio() {
-	while(counter < audioChunks.length) {
-		var arrayBuffer = audioChunks[counter];
+	while(queue.isEmpty() !== false) {
+		var arrayBuffer = queue.dequeue();
 
         audioContext.decodeAudioData(arrayBuffer, function(buffer){
             var source = audioContext.createBufferSource();
@@ -30,42 +39,12 @@ function playAudio() {
         }, function(){
             console.log('error')
         });
-        counter++
-		//var data = new DataView(arrayBuffer);
-		//var audio = new Int16Array(data.byteLength / Int16Array.BYTES_PER_ELEMENT);
-		//var len = audio.length;
-		//for (var jj = 0; jj < len; ++jj) {
-		//	audio[jj] = data.getInt16(jj * Int16Array.BYTES_PER_ELEMENT, true);
-		//}
-        //
-		//var right = new Float32Array(audio.length);
-        //
-		//var channleCounter = 0;
-		//for (var i = 0; i < audio.length; ) {
-		//	var normalizedRight = audio[i] / 32768;
-        //
-		//	i = i + 1;
-		//	right[channleCounter] = normalizedRight;
-        //
-		//	channleCounter++;
-		//}
-        //
-		//var source = audioContext.createBufferSource();
-        //
-		//var audioBuffer = audioContext.createBuffer(1, right.length, 44100 * 2);
-		//audioBuffer.getChannelData(0).set(right);
-        //
-		//source.buffer = audioBuffer;
-        //
-		//source.connect(audioContext.destination);
-        //
-		//source.start(time);
-		//time += audioBuffer.duration;
 
-		//counter++;
+        if(queue.size() < minSize) {
+        	w.postMessage("empty");
+        }
 	}
-
-	w.postMessage("empty");
+	completelyEmpty = true;
 }
 
 function _base64ToArrayBuffer(base64) {
