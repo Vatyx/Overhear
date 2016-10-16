@@ -70,27 +70,31 @@ def run():
     return 'run'
 
 
-@app.route('/pause')
+@app.route('/pause', methods=['GET'])
 def pause():
     global ac
     if ac is not None:
         ac.pause()
     else:
-        print 'AudioCapturer must be running before attempting to pause.'
-    return render_template('layout.html')
+        return 'AudioCapturer must be running before attempting to pause.'
+    return "oh man we are just so paused, just wait, just you wait"
+
+@app.route('/test', methods=['GET'])
+def test():
+   return "hey this is a test" 
 
 
-@app.route('/stop')
+@app.route('/stop', methods=["GET"])
 def stop():
     global ac, websocket_client
     if ac is not None and websocket_client is not None:
 	ac.stop()
     else:
-        print 'AudioCapturer must be running before attempting to stop.'
+        return 'AudioCapturer must be running before attempting to stop.'
 
     ac = None
     websocket_client = None
-    return render_template('layout.html')
+    return "oh shit you just stopped all the music man, welcome to lame town"
 
 
 if __name__ == '__main__':
