@@ -5,9 +5,9 @@ package main
 
 import (
 	"fmt"
-	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 
@@ -81,18 +81,21 @@ func getBroadcaster(c *Coordinator, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var h NewHub
-    if r.Body == nil {
-        http.Error(w, "No hub id specified", 400)
-        return
-    }
-    err = json.NewDecoder(r.Body).Decode(&h)
-    if err != nil {
-            http.Error(w, err.Error(), 400)
-            return
-    }
+	url := r.URL
+	values := url.Query()
+	hid, ok := values["id"]
+	if !ok {
+    	http.Error(w, "No id passed by request", 500)
+    	return
+	}
 
-    hub, ok := c.hubs[h.id]
+	actualid, err := strconv.Atoi(hid[0])
+	if err != nil {
+		http.Error(w, "Malformed id given in parameters", 500)
+    	return
+	}
+
+    hub, ok := c.hubs[actualid]
     if !ok {
     	http.Error(w, "Specified hub not found", 500)
     	return
