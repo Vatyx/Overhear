@@ -1,7 +1,7 @@
 var audioChunks = [];
 var time = 0;
 var counter = 0;
-var firstMax = 20;
+var firstMax = 30;
 
 ws = new WebSocket("ws://ec2-52-36-25-96.us-west-2.compute.amazonaws.com:3000/ws");
 var Base64Binary = {
@@ -65,13 +65,6 @@ var Base64Binary = {
 }
 
 function _base64ToArrayBuffer(base64) {
-    //var binary_string =  atob(base64);
-    //var len = binary_string.length;
-    //var bytes = new Uint8Array( len );
-    //for (var i = 0; i < len; i++)        {
-    //    bytes[i] = binary_string.charCodeAt(i);
-    //}
-    //return bytes.buffer;
 	return Base64Binary.decodeArrayBuffer(base64);
 }
 
@@ -80,6 +73,7 @@ ws.onopen = function() {
 }
 
 ws.onmessage = function(message) {
+	console.log("Got new chunk");
 	var bufferArray = _base64ToArrayBuffer(message.data);
 	audioChunks.push(bufferArray);
 	counter++;

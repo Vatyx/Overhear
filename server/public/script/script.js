@@ -1,8 +1,9 @@
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 var audioChunks = [];
-var time = 0;
+var time = 10;
 var counter = 0;
+var first = true;
 
 var w = new Worker("public/script/worker.js");
 
@@ -11,6 +12,11 @@ w.onmessage = function(event) {
 		w.terminate();
 	}
 	else{
+		if(first) {
+			time = audioContext.currentTime + 2;
+			console.log("FIRST", time);
+			first = false;
+		}
 		audioChunks = event.data;
 		counter = 0;
 		playAudio();
@@ -27,42 +33,12 @@ function playAudio() {
             source.connect(audioContext.destination)
             source.start(time);
             time += source.buffer.duration
+		console.log(time);
         }, function(){
             console.log('error')
         });
         counter++
-		//var data = new DataView(arrayBuffer);
-		//var audio = new Int16Array(data.byteLength / Int16Array.BYTES_PER_ELEMENT);
-		//var len = audio.length;
-		//for (var jj = 0; jj < len; ++jj) {
-		//	audio[jj] = data.getInt16(jj * Int16Array.BYTES_PER_ELEMENT, true);
-		//}
-        //
-		//var right = new Float32Array(audio.length);
-        //
-		//var channleCounter = 0;
-		//for (var i = 0; i < audio.length; ) {
-		//	var normalizedRight = audio[i] / 32768;
-        //
-		//	i = i + 1;
-		//	right[channleCounter] = normalizedRight;
-        //
-		//	channleCounter++;
-		//}
-        //
-		//var source = audioContext.createBufferSource();
-        //
-		//var audioBuffer = audioContext.createBuffer(1, right.length, 44100 * 2);
-		//audioBuffer.getChannelData(0).set(right);
-        //
-		//source.buffer = audioBuffer;
-        //
-		//source.connect(audioContext.destination);
-        //
-		//source.start(time);
-		//time += audioBuffer.duration;
 
-		//counter++;
 	}
 
 	w.postMessage("empty");
