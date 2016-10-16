@@ -60,8 +60,6 @@ body {
 	margin: 0 auto;
 	left: 0;
 	right: 0;
-  bottom: 0;
-  top: 0;
     border: 16px solid #f3f3f3; /* Light grey */
     border-top: 16px solid rgba(171,71,188,1); /* Blue */
     border-radius: 50%;
