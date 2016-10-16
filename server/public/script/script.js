@@ -55,5 +55,5 @@ function _base64ToArrayBuffer(base64) {
 
 function buttonClicked() {
 	var id = document.getElementById("streamer_id").value;
-	postMessage(["streamer_id", id]);
+	w.postMessage(["streamer_id", id]);
 }
