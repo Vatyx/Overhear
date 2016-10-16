@@ -1,7 +1,7 @@
 var audioChunks = [];
 var time = 0;
 var counter = 0;
-var firstMax = 40;
+var firstMax = 30;
 
 var Base64Binary = {
 _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",

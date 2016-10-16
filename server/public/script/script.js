@@ -22,7 +22,10 @@ w.onmessage = function(event) {
 			time = audioContext.currentTime + 3;
 			console.log("FIRST", time);
 			first = false;
-			frameLooper();
+			jQuery('.loader').hide('slow', 'linear', function() {
+				jQuery('#mp3_player').show('slow', 'linear')
+			});
+			frameLooper();	
 		}
 		audioChunks = event.data;
 		counter = 0;
