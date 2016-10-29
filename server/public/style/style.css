@@ -74,6 +74,6 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-div#mp3_player{ width:500px; height:60px; background:#000; margin:50px auto; display: none;}
+div#mp3_player{ width:600px; height:100px; background:#000; margin:50px auto; display: none;}
 div#mp3_player > div > audio{  width:500px; background:#000; float:left;  }
-div#mp3_player > canvas{ width:500px; height:60px; background:#002D3C; float:left; }
+div#mp3_player > canvas{ width:600px; height:100px; background:#002D3C; float:left; }
